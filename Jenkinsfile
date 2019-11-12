@@ -8,8 +8,9 @@ openshift.withCluster() {
   env.PROD = "${APP_NAME}-prod"
 }
 
-podTemplate(containers: [
+podTemplate(
     cloud: "openshift",
+    containers: [
     containerTemplate(
       name: "jnlp",
       image: "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11",
