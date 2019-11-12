@@ -9,6 +9,7 @@ openshift.withCluster() {
 }
 
 podTemplate(
+    label: "dotnet-pod",
     cloud: "openshift",
     containers: [
     containerTemplate(
@@ -18,7 +19,7 @@ podTemplate(
     containerTemplate(name: 'dotnet', image: 'registry.redhat.io/dotnet/dotnet-22-rhel7:2.2', ttyEnabled: true, command: 'cat')
   ]) {
 
-    node(POD_LABEL) {
+    node("dotnet-pod") {
         container('dotnet') {
             // Checkout source code
             // This is required as Pipeline code is originally checkedout to
