@@ -9,6 +9,7 @@ openshift.withCluster() {
 }
 
 podTemplate(containers: [
+    cloud: "openshift",
     containerTemplate(
       name: "jnlp",
       image: "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11",
