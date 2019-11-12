@@ -38,3 +38,4 @@ msbuild.wrn
 
 *.pem
 global.json
+galaxy

@@ -1,0 +1,43 @@
+application_name: dot-net-auth
+build_namespace: "{{ application_name }}-build"
+dev_namespace: "{{ application_name }}-dev"
+application_repository_url: "https://github.com/cloudfirst-dev/dotnet-core-jwt.git"
+application_repository_ref: master
+application_readiness_response: "html"
+application_readiness_path: "/"
+pipeline_script: "Jenkinsfile"
+
+openshift_cluster_content:
+- object: projects
+  content:
+  - name: "create environments"
+    template: "{{ inventory_dir }}/../.openshift/projects/projects.yml"
+    action: create
+    params_from_vars:
+      BUILD_NAMESPACE: "{{ build_namespace }}"
+      DEV_NAMESPACE: "{{ dev_namespace }}"
+    tags:
+      - project
+- object: builds
+  content:
+  - name: "deploy build pipeline to dev"
+    template: "{{ inventory_dir }}/../.openshift/templates/build.yml"
+    params_from_vars:
+      APPLICATION_NAME: "{{ application_name }}"
+      NAMESPACE: "{{ build_namespace }}"
+      SOURCE_REPOSITORY_URL: "{{ application_repository_url }}"
+      SOURCE_REPOSITORY_REF: "{{ application_repository_ref }}"
+      PIPELINE_SCRIPT: "{{ pipeline_script }}"
+    tags:
+      - build
+- object: deployments
+  content:
+  - name: "deploy dev environment"
+    template: "{{ inventory_dir }}/../.openshift/templates/deployment.yml"
+    params_from_vars:
+      APPLICATION_NAME: "{{ application_name }}"
+      NAMESPACE: "{{ dev_namespace }}"
+      READINESS_RESPONSE: "{{ application_readiness_response }}"
+      READINESS_PATH: "{{ application_readiness_path }}"
+    tags:
+      - deployment
