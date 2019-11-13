@@ -35,7 +35,7 @@ podTemplate(
                 dir('api') {
                 sh '''
                     export PATH=/opt/rh/rh-dotnet22/root/usr/bin:$PATH
-                    dotnet publish -c Release /p:MicrosoftNETPlatformLibrary=Microsoft.NETCore.App"
+                    dotnet publish -c Release /p:MicrosoftNETPlatformLibrary=Microsoft.NETCore.App
                 '''
                 }
             }
