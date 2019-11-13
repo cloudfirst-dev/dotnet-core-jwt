@@ -47,13 +47,13 @@ podTemplate(
                 // This places your artifacts into right location inside your S2I image
                 // if the S2I image supports it.
                 openshift.withCluster() {
-                    openshift.selector("bc", "${APP_NAME}-web").startBuild("--from-dir=api/bin/Release/netcoreapp2.2/publish", "--wait")
+                    openshift.selector("bc", "dot-net-auth").startBuild("--from-dir=api/bin/Release/netcoreapp2.2/publish", "--wait")
                 }
              }
 
             stage('Promote from Build to Dev') {
                 openshift.withCluster() {
-                    openshift.tag("${APP_NAME}-web", "env.DEV/${APP_NAME}-web")
+                    openshift.tag("dot-net-auth", "env.DEV/dot-net-auth")
                 }
             }
 
