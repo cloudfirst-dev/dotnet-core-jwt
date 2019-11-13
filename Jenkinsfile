@@ -46,14 +46,18 @@ podTemplate(
                 // Giving all the artifacts to OpenShift Binary Build
                 // This places your artifacts into right location inside your S2I image
                 // if the S2I image supports it.
-                openshift.withCluster() {
-                    openshift.selector("bc", "dot-net-auth").startBuild("--from-dir=api/bin/Release/netcoreapp2.2/publish", "--wait")
+                container("jnlp") {
+                    openshift.withCluster() {
+                        openshift.selector("bc", "dot-net-auth").startBuild("--from-dir=api/bin/Release/netcoreapp2.2/publish", "--wait")
+                    }
                 }
              }
 
             stage('Promote from Build to Dev') {
-                openshift.withCluster() {
-                    openshift.tag("dot-net-auth", "env.DEV/dot-net-auth")
+                container("jnlp") {
+                    openshift.withCluster() {
+                        openshift.tag("dot-net-auth", "env.DEV/dot-net-auth")
+                    }
                 }
             }
 
