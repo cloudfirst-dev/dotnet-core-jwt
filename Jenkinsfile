@@ -34,8 +34,8 @@ podTemplate(
             stage('publish') {
                 dir('api') {
                 sh '''
-                    export DOTNET_STARTUP_PROJECT=$(pwd)
-                    /usr/libexec/s2i/assemble
+                    export PATH=/opt/rh/rh-dotnet22/root/usr/bin:$PATH
+                    dotnet publish -c Release /p:MicrosoftNETPlatformLibrary=Microsoft.NETCore.App"
                 '''
                 }
             }
