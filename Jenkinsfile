@@ -33,7 +33,10 @@ podTemplate(
             // Run Maven build, skipping tests
             stage('publish') {
                 dir('web') {
-                sh "dotnet publish -c Release /p:MicrosoftNETPlatformLibrary=Microsoft.NETCore.App"
+                sh """
+                    export DOTNET_STARTUP_PROJECT=$(pwd)
+                    /usr/libexec/s2i/assemble
+                """
                 }
             }
 
