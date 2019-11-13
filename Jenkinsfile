@@ -32,7 +32,7 @@ podTemplate(
 
             // Run Maven build, skipping tests
             stage('publish') {
-                dir('web') {
+                dir('api') {
                 sh '''
                     export DOTNET_STARTUP_PROJECT=$(pwd)
                     /usr/libexec/s2i/assemble
