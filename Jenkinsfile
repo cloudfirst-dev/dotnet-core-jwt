@@ -46,16 +46,20 @@ podTemplate(
                 // Giving all the artifacts to OpenShift Binary Build
                 // This places your artifacts into right location inside your S2I image
                 // if the S2I image supports it.
-                binaryBuild(projectName: env.BUILD, buildConfigName: "${APP_NAME}-web", buildFromPath: "web/bin/Release/netcoreapp2.2/publish")
-            }
+                openshift.withCluster() {
+                    openshift.selector("bc", "${APP_NAME}-web").startBuild("--from-dir=api/bin/Release/netcoreapp2.2/publish", "--wait")
+                }
+             }
 
             stage('Promote from Build to Dev') {
-                tagImage(sourceImageName: "${APP_NAME}-web", sourceImagePath: env.BUILD, toImagePath: env.DEV)
+                openshift.withCluster() {
+                    openshift.tag("${APP_NAME}-web", "env.DEV/${APP_NAME}-web")
+                }
             }
 
-            stage ('Verify Deployment to Dev') {
-                verifyDeployment(projectName: env.DEV, targetApp: "${APP_NAME}-web")
-            }
+            // stage ('Verify Deployment to Dev') {
+            //     verifyDeployment(projectName: env.DEV, targetApp: "${APP_NAME}-web")
+            // }
         }
     }
 }
