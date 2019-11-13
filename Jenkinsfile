@@ -11,6 +11,7 @@ openshift.withCluster() {
 podTemplate(
     label: "dotnet-pod",
     cloud: "openshift",
+    serviceAccount: "jenkins",
     containers: [
     containerTemplate(
       name: "jnlp",
