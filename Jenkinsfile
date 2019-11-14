@@ -57,7 +57,7 @@ podTemplate(
             stage('Promote from Build to Dev') {
                 container("jnlp") {
                     openshift.withCluster() {
-                        openshift.tag("dot-net-auth", "env.DEV/dot-net-auth")
+                        openshift.tag("dot-net-auth", "${env.DEV}/dot-net-auth:latest")
                     }
                 }
             }
