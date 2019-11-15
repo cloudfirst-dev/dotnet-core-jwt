@@ -48,7 +48,7 @@ podTemplate(
                 container('jnlp') {
                     openshift.withCluster() {
                         openshift.withProject("dot-net-auth-dev") {
-                            def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object();
+                            def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object().spec;
                             echo apiRoute
                             apiHostName = apiRoute.spec.host;
                         }
