@@ -15,9 +15,20 @@ podTemplate(
     containers: [
     containerTemplate(
       name: "jnlp",
-      image: "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11",
+      image: "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11"
     ),
-    containerTemplate(name: 'dotnet', image: 'registry.redhat.io/dotnet/dotnet-22-rhel7:2.2', ttyEnabled: true, command: 'cat')
+    containerTemplate(
+        name: "nodejs",
+        image: "registry.redhat.io/rhel8/nodejs-12:latest",
+        ttyEnabled: true,
+        command: 'cat'
+    ),
+    containerTemplate(
+        name: 'dotnet',
+        image: 'registry.redhat.io/dotnet/dotnet-22-rhel7:2.2',
+        ttyEnabled: true,
+        command: 'cat'
+    )
   ]) {
 
     node("dotnet-pod") {
@@ -58,6 +69,26 @@ podTemplate(
                 container("jnlp") {
                     openshift.withCluster() {
                         openshift.tag("${env.BUILD}/dot-net-auth:latest", "${env.DEV}/dot-net-auth:latest")
+                    }
+                }
+            }
+
+            stage('Build JS frontend') {
+                def apiHostName = "";
+
+                openshift.withCluster() {
+                    openshift.withProject("dot-net-auth-dev") {
+                        def apiRoute = openshift.selector( 'route/dot-net-auth' );
+                        apiHostName = apiRoute.host();
+                    }
+                }
+
+                container("nodejs") {
+                    dir("ui") {
+                        sh '''
+                            export VUE_APP_AUTH_ENDPOINT=${apiHostName}
+                            env
+                        '''
                     }
                 }
             }
