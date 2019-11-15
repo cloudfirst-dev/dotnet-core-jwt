@@ -11,7 +11,9 @@ This quickstart can be deployed quickly using Ansible. Here are the steps.
 3. Run `ansible-galaxy install -r requirements.yml --roles-path=galaxy`
 2. Log into an OpenShift cluster, then run the following command.
 ```
-$ ansible-playbook -i ./.applier/ galaxy/openshift-applier/playbooks/openshift-cluster-seed.yml
+$ export TOKENS_AUDIENCE=[valid audience for oauth provider used for token validation]
+$ export TOKENS_ISSUER=[valid issuer for oauth provider used for token validation]
+$ ansible-playbook -e tokens_audience=$TOKENS_AUDIENCE -e tokens_issuer=$TOKENS_ISSUER -i ./.applier/ galaxy/openshift-applier/playbooks/openshift-cluster-seed.yml
 ```
 3. If you are running on an OpenShift 4.x cluster be sure to create a Jenkins instance in the dotnet-core-jwt-build namespace
 

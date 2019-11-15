@@ -23,7 +23,7 @@ objects:
     - port: 8080
       targetPort: 8080
     selector:
-      deploymentConfig: ${APPLICATION_NAME}-web
+      deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
   id: ${APPLICATION_NAME}-http
   kind: Route
@@ -74,6 +74,12 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          - name: TOKENS_ISSUER
+            value: ${TOKENS_ISSUER}
+          - name: TOKENS_AUDIENCE
+            value: ${TOKENS_AUDIENCE}
+          - name: ALLOWED_ORIGIN
+            value: ${ALLOWED_ORIGIN}
           ports:
           - containerPort: 8080
             name: http
@@ -84,6 +90,15 @@ objects:
               - /bin/bash
               - -c
               - curl -s 'http://localhost:8080${READINESS_PATH}'
+          volumeMounts:
+          # name must match the volume name below
+          - name: public-key
+            mountPath: /certs
+            readOnly: true
+        volumes:
+        - name: public-key
+          secret:
+            secretName: public-key
         terminationGracePeriodSeconds: 60
     triggers:
     - imageChangeParams:
@@ -110,3 +125,13 @@ parameters:
   name: READINESS_PATH
   required: true
   value: '/'
+- description: 'OAuth Token Issuer for validation'
+  name: TOKENS_ISSUER
+  required: true
+- description: 'OAuth Token Audience for validation'
+  name: TOKENS_AUDIENCE
+  required: true
+- description: "Allowed origins for api"
+  name: ALLOWED_ORIGIN
+  value: "*"
+  required: true

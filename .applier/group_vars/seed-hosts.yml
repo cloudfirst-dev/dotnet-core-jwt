@@ -30,6 +30,12 @@ openshift_cluster_content:
       PIPELINE_SCRIPT: "{{ pipeline_script }}"
     tags:
       - build
+- object: roles
+  content:
+  - name: "deploy the RBAC controls"
+    template: "{{ inventory_dir }}/../.openshift/templates/roles.yml"
+    params_from_vars:
+      APPLICATION_NAME: "{{ application_name }}"
 - object: deployments
   content:
   - name: "deploy dev environment"
@@ -39,5 +45,7 @@ openshift_cluster_content:
       NAMESPACE: "{{ dev_namespace }}"
       READINESS_RESPONSE: "{{ application_readiness_response }}"
       READINESS_PATH: "{{ application_readiness_path }}"
+      TOKENS_AUDIENCE: "{{ tokens_audience }}"
+      TOKENS_ISSUER: "{{ tokens_issuer }}"
     tags:
       - deployment

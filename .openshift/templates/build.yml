@@ -29,7 +29,6 @@ objects:
       git:
         uri: ${SOURCE_REPOSITORY_URL}
         ref: ${SOURCE_REPOSITORY_REF}
-      contextDir: job
     triggers:
     - type: "GitHub"
       github:
