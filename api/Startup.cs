@@ -29,7 +29,7 @@ namespace api
         {
             services.AddMvc();
 
-            services.AddCors(CngKeyCreationOptions =>
+            services.AddCors(options =>
             {
                options.AddPolicy(MyAllowSpecificOrigins,
                builder =>
