@@ -34,7 +34,8 @@ namespace api
                options.AddPolicy(MyAllowSpecificOrigins,
                builder =>
                {
-                   builder.WithOrigins(this.Configuration["ALLOWED_ORIGIN"]);
+                   builder.WithOrigins(this.Configuration["ALLOWED_ORIGIN"])
+                                        .AllowAnyHeader();
                });
             });
 
