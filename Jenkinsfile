@@ -42,6 +42,26 @@ podTemplate(
                 git url: "${APPLICATION_SOURCE_REPO}", branch: "${APPLICATION_SOURCE_REF}"
             }
 
+            stage('Build JS frontend') {
+                def apiHostName = "";
+
+                openshift.withCluster() {
+                    openshift.withProject("dot-net-auth-dev") {
+                        def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object();
+                        apiHostName = apiRoute.spec.host;
+                    }
+                }
+
+                container("nodejs") {
+                    dir("ui") {
+                        sh '''
+                            export VUE_APP_AUTH_ENDPOINT=${apiHostName}
+                            env
+                        '''
+                    }
+                }
+            }
+
             // Run Maven build, skipping tests
             stage('publish') {
                 dir('api') {
@@ -73,25 +93,7 @@ podTemplate(
                 }
             }
 
-            stage('Build JS frontend') {
-                def apiHostName = "";
-
-                openshift.withCluster() {
-                    openshift.withProject("dot-net-auth-dev") {
-                        def apiRoute = openshift.selector( 'route/dot-net-auth' );
-                        apiHostName = apiRoute.host();
-                    }
-                }
-
-                container("nodejs") {
-                    dir("ui") {
-                        sh '''
-                            export VUE_APP_AUTH_ENDPOINT=${apiHostName}
-                            env
-                        '''
-                    }
-                }
-            }
+            
 
             // stage ('Verify Deployment to Dev') {
             //     verifyDeployment(projectName: env.DEV, targetApp: "${APP_NAME}-web")
