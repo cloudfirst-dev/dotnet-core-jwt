@@ -45,10 +45,12 @@ podTemplate(
             stage('Build JS frontend') {
                 def apiHostName = "";
 
-                openshift.withCluster() {
-                    openshift.withProject("dot-net-auth-dev") {
-                        def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object();
-                        apiHostName = apiRoute.spec.host;
+                container('jnlp') {
+                    openshift.withCluster() {
+                        openshift.withProject("dot-net-auth-dev") {
+                            def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object();
+                            apiHostName = apiRoute.spec.host;
+                        }
                     }
                 }
 
