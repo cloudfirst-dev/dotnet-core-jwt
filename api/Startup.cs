@@ -15,6 +15,8 @@ namespace api
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,6 +28,15 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddCors(CngKeyCreationOptions =>
+            {
+               options.AddPolicy(MyAllowSpecificOrigins,
+               builder =>
+               {
+                   builder.WithOrigins(this.Configuration["ALLOWED_ORIGIN"]);
+               });
+            });
 
             services.AddAuthentication(options =>
                 {
