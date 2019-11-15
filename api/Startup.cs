@@ -97,6 +97,8 @@ namespace api
                 app.UseHsts();
             }
 
+            app.UseCors(MyAllowSpecificOrigins);
+
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
