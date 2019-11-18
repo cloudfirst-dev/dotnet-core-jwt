@@ -59,7 +59,7 @@ podTemplate(
                 container("nodejs") {
                     dir("ui") {
                         withEnv(["VUE_APP_AUTH_ENDPOINT=${apiHostName}"]) {
-                            sh 'env'
+                            sh 'yarn build'
                         }
                     }
                 }
@@ -76,7 +76,7 @@ podTemplate(
             }
 
             // Build Container Image using the artifacts produced in previous stages
-            stage('Build Container Image'){
+            stage('Build Container Images'){
                 // Build container image using local Openshift cluster
                 // Giving all the artifacts to OpenShift Binary Build
                 // This places your artifacts into right location inside your S2I image
@@ -84,6 +84,7 @@ podTemplate(
                 container("jnlp") {
                     openshift.withCluster() {
                         openshift.selector("bc", "dot-net-auth").startBuild("--from-dir=api/bin/Release/netcoreapp2.2/publish", "--wait")
+                        openshift.selector("bc", "dot-net-auth-ui").startBuild("--from-dir=ui/dist", "--wait")
                     }
                 }
              }
