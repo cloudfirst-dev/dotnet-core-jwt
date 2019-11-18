@@ -59,6 +59,7 @@ podTemplate(
                 container("nodejs") {
                     dir("ui") {
                         withEnv(["VUE_APP_AUTH_ENDPOINT=${apiHostName}"]) {
+                            sh 'npm install'
                             sh 'npm run-script build'
                         }
                     }
