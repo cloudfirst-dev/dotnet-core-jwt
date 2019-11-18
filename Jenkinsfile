@@ -51,6 +51,7 @@ podTemplate(
                             def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object().spec;
                             echo apiRoute.host
                             apiHostName = apiRoute.host;
+                            echo apiHostName
                         }
                     }
                 }
