@@ -27,11 +27,9 @@ export default {
     var values = [];
     var this_ = this;
     if (this.$auth.isAuthenticated()) {
-      this.$http
-        .get(`${process.env.VUE_APP_API_BASE}/api/values`)
-        .then(function(resp) {
-          this_.values = resp.data;
-        });
+      this.$http.get(`${this.$config.baseURL}/api/values`).then(function(resp) {
+        this_.values = resp.data;
+      });
     }
 
     return {
@@ -54,7 +52,7 @@ export default {
           this_.isAuthenticated = this_.$auth.isAuthenticated();
 
           this_.$http
-            .get(`${process.env.VUE_APP_API_BASE}/api/values`)
+            .get(`${this_.$config.baseURL}/api/values`)
             .then(function(resp) {
               this_.values = resp.data;
             });
