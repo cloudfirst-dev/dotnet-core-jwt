@@ -58,8 +58,9 @@ podTemplate(
 
                 container("nodejs") {
                     dir("ui") {
-                        withEnv(["VUE_APP_AUTH_ENDPOINT=${apiHostName}"])
-                        sh 'env'
+                        withEnv(["VUE_APP_AUTH_ENDPOINT=${apiHostName}"]) {
+                            sh 'env'
+                        }
                     }
                 }
             }
