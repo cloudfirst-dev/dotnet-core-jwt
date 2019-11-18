@@ -59,7 +59,7 @@ podTemplate(
                 container("nodejs") {
                     dir("ui") {
                         withEnv(["VUE_APP_AUTH_ENDPOINT=${apiHostName}"]) {
-                            sh 'yarn build'
+                            sh 'npm run-script build'
                         }
                     }
                 }
