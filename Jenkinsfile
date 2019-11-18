@@ -93,6 +93,7 @@ podTemplate(
                 container("jnlp") {
                     openshift.withCluster() {
                         openshift.tag("${env.BUILD}/dot-net-auth:latest", "${env.DEV}/dot-net-auth:latest")
+                        openshift.tag("${env.BUILD}/dot-net-auth-ui:latest", "${env.DEV}/dot-net-auth-ui:latest")
                     }
                 }
             }
