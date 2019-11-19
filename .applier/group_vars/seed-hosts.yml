@@ -36,6 +36,8 @@ openshift_cluster_content:
     template: "{{ inventory_dir }}/../.openshift/templates/roles.yml"
     params_from_vars:
       APPLICATION_NAME: "{{ application_name }}"
+      BUILD_NAMESPACE: "{{ build_namespace }}"
+      DEV_NAMESPACE: "{{ dev_namespace }}"
 - object: deployments
   content:
   - name: "deploy dev environment"

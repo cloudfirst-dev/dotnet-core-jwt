@@ -13,11 +13,11 @@ objects:
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: jenkins-admin
-    namespace: ${APPLICATION_NAME}-dev
+    namespace: ${DEV_NAMESPACE}
   subjects:
     - kind: ServiceAccount
       name: jenkins
-      namespace: ${APPLICATION_NAME}-build
+      namespace: ${BUILD_NAMESPACE}
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -25,4 +25,10 @@ objects:
 parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
+  required: true
+- description: The dev namespace
+  name: DEV_NAMESPACE
+  required: true
+- description: The build namespace
+  name: BUILD_NAMESPACE
   required: true

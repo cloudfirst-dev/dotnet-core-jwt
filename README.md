@@ -26,6 +26,9 @@ $ ansible-playbook \
 -e auth_public_key=$AUTH_PUBLIC_KEY \
 -i ./.applier/ galaxy/openshift-applier/playbooks/openshift-cluster-seed.yml
 ```
-3. If you are running on an OpenShift 4.x cluster be sure to create a Jenkins instance in the dotnet-core-jwt-build namespace
+3. If you are running on an OpenShift 4.x cluster be sure to create a Jenkins instance in the dot-net-auth-build namespace
+```
+oc new-app jenkins-ephemeral -n [build-namespace]
+```
 
 At this point you should have two projects created (`dotnet-core-jwt-build`, and `dotnet-core-jwt-dev`) with a pipeline in the `-build` project, and our job runner app and job images
