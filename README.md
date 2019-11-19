@@ -13,7 +13,18 @@ This quickstart can be deployed quickly using Ansible. Here are the steps.
 ```
 $ export TOKENS_AUDIENCE=[valid audience for oauth provider used for token validation]
 $ export TOKENS_ISSUER=[valid issuer for oauth provider used for token validation]
-$ ansible-playbook -e tokens_audience=$TOKENS_AUDIENCE -e tokens_issuer=$TOKENS_ISSUER -i ./.applier/ galaxy/openshift-applier/playbooks/openshift-cluster-seed.yml
+$ export AUTH_CLIENT_ID=[valid oauth client id]
+$ export AUTH_URL=[valid oauth auth url]
+$ export AUTH_PUBLIC_KEY=$(cat /path/to/public/key | base64)
+$ export BASE_API_URL=[route address for deployed api]
+$ ansible-playbook \
+-e tokens_audience=$TOKENS_AUDIENCE \
+-e tokens_issuer=$TOKENS_ISSUER \
+-e auth_url=$AUTH_URL \
+-e base_api_url=$BASE_API_URL \
+-e auth_client_id=$AUTH_CLIENT_ID \
+-e auth_public_key=$AUTH_PUBLIC_KEY \
+-i ./.applier/ galaxy/openshift-applier/playbooks/openshift-cluster-seed.yml
 ```
 3. If you are running on an OpenShift 4.x cluster be sure to create a Jenkins instance in the dotnet-core-jwt-build namespace
 

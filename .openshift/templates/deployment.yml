@@ -39,11 +39,47 @@ objects:
     to:
       name: ${APPLICATION_NAME}-web
 - apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The web server's http port.
+    labels:
+      app: ${APPLICATION_NAME}-ui
+    name: ${APPLICATION_NAME}-ui
+    namespace: ${NAMESPACE}
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}-ui
+- apiVersion: v1
+  id: ${APPLICATION_NAME}-ui
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for application's http service.
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-ui
+    namespace: ${NAMESPACE}
+  spec:
+    host: ${HOSTNAME_HTTP}
+    to:
+      name: ${APPLICATION_NAME}-ui
+- apiVersion: v1
   kind: ImageStream
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
+    namespace: ${NAMESPACE}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-ui
     namespace: ${NAMESPACE}
 - apiVersion: v1
   kind: DeploymentConfig
@@ -108,6 +144,59 @@ objects:
         from:
           kind: ImageStreamTag
           name: ${APPLICATION_NAME}:latest
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-ui
+    namespace: ${NAMESPACE}
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}-ui
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          deploymentConfig: ${APPLICATION_NAME}-ui
+        name: ${APPLICATION_NAME}-ui
+      spec:
+        volumes:
+        - name: ui-config
+          configMap:
+            name: ui-config
+            defaultMode: 420
+        containers:
+        - image: ${APPLICATION_NAME}-ui
+          imagePullPolicy: Always
+          name: ${APPLICATION_NAME}-ui
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - curl -s 'http://localhost:8080${READINESS_PATH}'
+          volumeMounts:
+          - name: ui-config
+            mountPath: /opt/app-root/src/config
+        terminationGracePeriodSeconds: 60
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APPLICATION_NAME}-ui
+        from:
+          kind: ImageStreamTag
+          name: ${APPLICATION_NAME}-ui:latest
       type: ImageChange
     - type: ConfigChange
 parameters:

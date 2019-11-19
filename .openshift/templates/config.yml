@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: basic-dotnet-core
+metadata:
+  annotations:
+    description: Application template for .NET Core applications built using a Jenkins Pipeline
+    iconClass: icon-tomcat
+    version: 1.2.0
+  name: basic-dotnet-core
+objects:
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: ui-config
+    namespace: ${NAMESPACE}
+  data:
+    config.json: |-
+      {
+        "baseURL":"${BASE_API_URL}",
+        "authURL":"${AUTH_URL}",
+        "authClientId":"${AUTH_CLIENT_ID}"
+      }
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: public-key
+    namespace: ${NAMESPACE}
+  data:
+    public.pem: >-
+      ${AUTH_PUBLIC_KEY}
+  type: Opaque
+parameters:
+- description: The namespace to deploy into
+  name: NAMESPACE
+  required: true
+- description: The OAuth2.0 auth url
+  name: AUTH_URL
+  required: true
+- description: The Base API URL
+  name: BASE_API_URL
+  required: true
+- description: The Auth client id
+  name: AUTH_CLIENT_ID
+  required: true
+- description: The Auth public key
+  name: AUTH_PUBLIC_KEY
+  required: true
