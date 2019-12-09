@@ -31,4 +31,4 @@ $ ansible-playbook \
 oc new-app jenkins-ephemeral -n [build-namespace]
 ```
 
-At this point you should have two projects created (`dotnet-core-jwt-build`, and `dotnet-core-jwt-dev`) with a pipeline in the `-build` project, and our job runner app and job images
+At this point you should have two projects created (`dot-net-auth-build`, and `dot-net-auth-dev`) with a pipeline in the `-build` project, and our job runner app and job images

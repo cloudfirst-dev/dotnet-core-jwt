@@ -3,9 +3,7 @@ openshift.withCluster() {
   env.APP_NAME = "${JOB_NAME}".replaceAll(/-build.*/, '')
   echo "Starting Pipeline for ${APP_NAME}..."
   env.BUILD = "${env.NAMESPACE}"
-  env.DEV = "${APP_NAME}-dev"
-  env.STAGE = "${APP_NAME}-stage"
-  env.PROD = "${APP_NAME}-prod"
+  env.DEV = "${env.DEV_NAMESPACE}"
 }
 
 podTemplate(
@@ -21,7 +19,9 @@ podTemplate(
         name: "nodejs",
         image: "registry.redhat.io/rhel8/nodejs-12:latest",
         ttyEnabled: true,
-        command: 'cat'
+        command: 'cat',
+        resourceLimitCpu: '1',
+        resourceLimitMemory: '1Gi'
     ),
     containerTemplate(
         name: 'dotnet',
@@ -45,23 +45,10 @@ podTemplate(
             stage('Build JS frontend') {
                 def apiHostName = "";
 
-                container('jnlp') {
-                    openshift.withCluster() {
-                        openshift.withProject("dot-net-auth-dev") {
-                            def apiRoute = openshift.selector( 'route', 'dot-net-auth' ).object().spec;
-                            echo apiRoute.host
-                            apiHostName = apiRoute.host;
-                            echo apiHostName
-                        }
-                    }
-                }
-
                 container("nodejs") {
                     dir("ui") {
-                        withEnv(["VUE_APP_AUTH_ENDPOINT=${apiHostName}"]) {
-                            sh 'npm install'
-                            sh 'npm run-script build'
-                        }
+                        sh 'npm install'
+                        sh 'npm run-script build'
                     }
                 }
             }

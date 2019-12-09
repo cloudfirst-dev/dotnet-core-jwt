@@ -50,6 +50,8 @@ objects:
           value: "${SOURCE_REPOSITORY_URL}"
         - name: "APPLICATION_SOURCE_REF"
           value: "${SOURCE_REPOSITORY_REF}"
+        - name: "APPLICATION_DEV_NAMESPACE"
+          value: "${DEV_NAMESPACE}"
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -101,6 +103,9 @@ parameters:
   value: basic-dotnet
 - description: The namespace to deploy into
   name: NAMESPACE
+  required: true
+- description: The namespace to deploy into
+  name: DEV_NAMESPACE
   required: true
 - description: Git source URI for application
   name: SOURCE_REPOSITORY_URL
