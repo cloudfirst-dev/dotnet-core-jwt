@@ -21,7 +21,8 @@ podTemplate(
         ttyEnabled: true,
         command: 'cat',
         resourceLimitCpu: '1',
-        resourceLimitMemory: '1Gi'
+        resourceLimitMemory: '1Gi',
+        resourceRequestMemory: '256Mi'
     ),
     containerTemplate(
         name: 'dotnet',
