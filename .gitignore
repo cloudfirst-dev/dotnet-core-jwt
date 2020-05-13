@@ -39,3 +39,5 @@ msbuild.wrn
 *.pem
 global.json
 galaxy
+config.sh
+ui/public/config/config.json

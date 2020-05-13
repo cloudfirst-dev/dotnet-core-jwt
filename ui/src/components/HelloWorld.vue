@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <div class="authentication-status" v-if="isAuthenticated">
-      You are successfully authenticated
+      You are successfully authenticated as {{ username }}.
       <ul>
         <li>{{ values }}</li>
       </ul>
@@ -25,16 +25,25 @@ export default {
   },
   data: function() {
     var values = [];
+    var username = '';
     var this_ = this;
     if (this.$auth.isAuthenticated()) {
       this.$http.get(`${this.$config.baseURL}/api/values`).then(function(resp) {
         this_.values = resp.data;
       });
+
+
+      this.$http
+      .get(`${this_.$config.baseURL}/whoami`)
+      .then(function(resp) {
+        this_.username = resp.data;
+      });
     }
 
     return {
       isAuthenticated: this.$auth.isAuthenticated(),
-      values
+      values,
+      username
     };
   },
   methods: {
@@ -55,6 +64,12 @@ export default {
             .get(`${this_.$config.baseURL}/api/values`)
             .then(function(resp) {
               this_.values = resp.data;
+            });
+
+          this_.$http
+            .get(`${this_.$config.baseURL}/whoami`)
+            .then(function(resp) {
+              this_.username = resp.data;
             });
         })
         .catch(function(err) {
