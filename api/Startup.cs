@@ -44,44 +44,11 @@ namespace api
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
                 })
-                .AddCookie()
-                .AddJwtBearer(config =>  
+                .AddJwtBearer(options =>
                 {
-                    // get the public key from config
-                    var keyPath = string.IsNullOrWhiteSpace(this.Configuration["TOKENS_PUBLIC_KEY_PATH"]) ? "/certs/public.pem" : this.Configuration["TOKENS_PUBLIC_KEY_PATH"];
-                    PemReader pemParser = new PemReader(new StreamReader(keyPath));
-                    var certObj = pemParser.ReadPemObject();
-                    
-                    // setup the signing key to be used to validate the jwt token
-                    AsymmetricKeyParameter asymmetricKeyParameter = PublicKeyFactory.CreateKey(certObj.Content);
-                    RsaKeyParameters rsaKeyParameters = (RsaKeyParameters) asymmetricKeyParameter;
-                    RSAParameters rsaParameters = new RSAParameters();
-                    rsaParameters.Modulus = rsaKeyParameters.Modulus.ToByteArrayUnsigned();
-                    rsaParameters.Exponent = rsaKeyParameters.Exponent.ToByteArrayUnsigned();
-                    var signingKey = new RsaSecurityKey(rsaParameters);
-
-                    // random config
-                    config.RequireHttpsMetadata = false;  
-                    config.SaveToken = true;
-                    
-                    // setup the token validation config
-                    config.TokenValidationParameters = new TokenValidationParameters()  
-                    {  
-                        IssuerSigningKey = signingKey,  
-                        ValidateAudience = true,  
-                        ValidAudience = this.Configuration["TOKENS_AUDIENCE"],  
-                        ValidateIssuer = true,  
-                        ValidIssuer = this.Configuration["TOKENS_ISSUER"],  
-                        ValidateLifetime = true,  
-                        ValidateIssuerSigningKey = true  
-                    };  
-                    
-                    config.Events = new JwtBearerEvents {
-                        // perform any custom mappings on valid token
-                        OnTokenValidated = async context => {
-                            // implement any custom mappings here
-                        }
-                    };
+                    options.Authority = this.Configuration["TOKENS_AUTHORITY"];
+                    options.RequireHttpsMetadata = false;
+                    options.Audience = this.Configuration["TOKENS_AUDIENCE"];
                 });
         }
 
