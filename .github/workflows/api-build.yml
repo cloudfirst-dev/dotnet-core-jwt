@@ -1,0 +1,19 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: vrutkovs/action-s2i@master
+      with:
+        path: api
+        base: registry.centos.org/dotnet/dotnet-21-centos7:latest
+        image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
