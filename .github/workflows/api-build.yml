@@ -13,15 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: vrutkovs/action-s2i@master
+    - uses: jacobsee/s2i-github-action@master
       with:
         path: api
         base: registry.centos.org/dotnet/dotnet-31-centos7
-        image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: cloudfirst/dotnet-core-jwt-api:latest
-        registry: quay.io
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        output_image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
+        image_push_registry: quay.io
+        image_push_username: ${{ secrets.DOCKER_USERNAME }}
+        image_push_password: ${{ secrets.DOCKER_PASSWORD }}
