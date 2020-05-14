@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
     - uses: vrutkovs/action-s2i@master
       with:
-        path: /home/runner/work/dotnet-core-jwt/dotnet-core-jwt/api
+        path: api
         base: registry.centos.org/dotnet/dotnet-21-centos7
         image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
