@@ -1,10 +1,14 @@
-name: .NET Core
+name: UI
 
 on:
   push:
     branches: [ master ]
+    paths:
+      - ui/**
   pull_request:
     branches: [ master ]
+    paths:
+      - ui/**
 
 jobs:
   build:
@@ -19,3 +23,11 @@ jobs:
     - uses: borales/actions-yarn@v2.1.0
       with:
         cmd: --cwd ui build # will run `yarn build` command
+    - uses: jacobsee/s2i-github-action@master
+      with:
+        path: ui/dist
+        base: registry.centos.org/centos/nginx-116-centos7
+        output_image: quay.io/cloudfirst/dotnet-core-jwt-ui:latest
+        image_push_registry: quay.io
+        image_push_username: ${{ secrets.DOCKER_USERNAME }}
+        image_push_password: ${{ secrets.DOCKER_PASSWORD }}
