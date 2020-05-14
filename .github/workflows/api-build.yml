@@ -17,7 +17,8 @@ jobs:
       with:
         path: api
         base: registry.centos.org/dotnet/dotnet-31-centos7
-        image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
+        image: cloudfirst/dotnet-core-jwt-api:latest
+        registry: quay.io
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
