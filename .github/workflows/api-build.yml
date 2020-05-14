@@ -15,5 +15,5 @@ jobs:
     - uses: vrutkovs/action-s2i@master
       with:
         path: ./api
-        base: registry.centos.org/dotnet/dotnet-21-centos7:latest
+        base: registry.centos.org/dotnet/dotnet-21-centos7
         image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
