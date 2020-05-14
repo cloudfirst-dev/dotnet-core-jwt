@@ -14,6 +14,6 @@ jobs:
     steps:
     - uses: vrutkovs/action-s2i@master
       with:
-        path: /github/workspace/api
+        path: /home/runner/work/dotnet-core-jwt/dotnet-core-jwt/api
         base: registry.centos.org/dotnet/dotnet-21-centos7
         image: quay.io/cloudfirst/dotnet-core-jwt-api:latest
