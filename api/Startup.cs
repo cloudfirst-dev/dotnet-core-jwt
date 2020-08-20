@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 
 namespace api
 {
@@ -34,11 +35,21 @@ namespace api
                });
             });
 
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
-                })
+            // services.AddAuthentication(options =>
+            //     {
+            //         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  
+            //         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+            //     })
+            //     .AddJwtBearer(options =>
+            //     {
+            //         options.Authority = this.Configuration["TOKENS_AUTHORITY"];
+            //         options.RequireHttpsMetadata = false;
+            //         options.Audience = this.Configuration["TOKENS_AUDIENCE"];
+            //     });
+
+            services
+                .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+                .AddNegotiate()
                 .AddJwtBearer(options =>
                 {
                     options.Authority = this.Configuration["TOKENS_AUTHORITY"];
@@ -73,7 +84,7 @@ namespace api
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Values}/{action=Index}/{id?}"
+                    pattern: "{controller=Values}/{action=Index}"
                 );
             });
         }
