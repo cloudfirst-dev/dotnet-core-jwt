@@ -27,5 +27,11 @@ namespace api.Controllers
         public ActionResult<string> WhoAmI() {
             return HttpContext.User.Identity.Name;
         }
+
+        [Route("[action]")]
+        [HttpGet]
+        public ActionResult<string> free() {
+            return "free for me";
+        }
     }
 }
