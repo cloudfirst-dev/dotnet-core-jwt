@@ -67,7 +67,7 @@ export default {
             });
 
           this_.$http
-            .get(`${this_.$config.baseURL}/whoami`)
+            .get(`${this_.$config.baseURL}/api/values/whoami`)
             .then(function(resp) {
               this_.username = resp.data;
             });
