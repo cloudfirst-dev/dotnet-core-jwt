@@ -49,7 +49,6 @@ namespace api
 
             services
                 .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-                .AddNegotiate()
                 .AddJwtBearer(options =>
                 {
                     options.Authority = this.Configuration["TOKENS_AUTHORITY"];
