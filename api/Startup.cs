@@ -11,8 +11,6 @@ namespace api
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,7 +25,7 @@ namespace api
 
             services.AddCors(options =>
             {
-               options.AddPolicy(MyAllowSpecificOrigins,
+               options.AddDefaultPolicy(
                builder =>
                {
                    builder.WithOrigins(this.Configuration["ALLOWED_ORIGIN"])
@@ -48,7 +46,11 @@ namespace api
             //     });
 
             services
-                .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+                })
                 .AddJwtBearer(options =>
                 {
                     options.Authority = this.Configuration["TOKENS_AUTHORITY"];
@@ -70,7 +72,7 @@ namespace api
                 app.UseHsts();
             }
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors();
 
             app.UseHttpsRedirection();
             app.UseRouting();
