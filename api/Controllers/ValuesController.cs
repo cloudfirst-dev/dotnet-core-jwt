@@ -25,7 +25,8 @@ namespace api.Controllers
         [Route("[action]")]
         [HttpGet]
         public ActionResult<string> WhoAmI() {
-            return HttpContext.User.Identity.Name;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            return identity.FindFirst("name").Value;
         }
 
         [Route("[action]")]
